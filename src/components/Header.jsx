@@ -126,6 +126,22 @@ function Header() {
               </div>
             )}
           </li>
+          {/* LOGIN / REGISTER */}
+<li className="block sm:inline mt-2 sm:mt-0">
+  <a
+    href="/login"
+    className="inline-block text-sm sm:text-base text-white bg-slate-600 hover:bg-slate-800 px-4 py-2 rounded-full transition duration-300 mr-2"
+  >
+    Login
+  </a>
+  <a
+    href="/register"
+    className="inline-block text-sm sm:text-base text-slate-800 border border-slate-800 hover:bg-slate-800 hover:text-white px-4 py-2 rounded-full transition duration-300"
+  >
+    Register
+  </a>
+</li>
+
         </ul>
       </div>
     </header>

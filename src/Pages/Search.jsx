@@ -6,9 +6,9 @@ function Search() {
 
   return (
     <div className="min-h-screen bg-slate-200 flex flex-col items-center justify-center px-4 py-10 relative">
-      {/* Background Image */}
+         {/* Background Image */}
       <div
-        className="absolute top-0 left-0 w-full h-full bg-cover bg-center"
+        className="absolute inset-0 bg-cover bg-center z-0"
         style={{ backgroundImage: `url('/images/sparebackground.jpg')` }}
       ></div>
 

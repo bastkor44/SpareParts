@@ -13,6 +13,8 @@ import FourWheeler from "./Pages/FourWheeler";
 import WishList from "./Pages/WishList";
 import Cart from "./Pages/Cart";
 import Search from "./Pages/Search";
+import Login from "./components/Login";
+import Register from "./components/Register";
 function App() {
 
   return (
@@ -34,6 +36,8 @@ function MainContents(){
 <Routes>
 <Route path="/" element={<Home/>} />
 <Route path="/about" element={<About/>} />
+<Route path="/login" element={<Login/>} />
+<Route path="/register" element={<Register/>} />
 
 <Route path="/twowheeler" element={<Twowheeler/>} />
 <Route path="/fourwheeler" element={<FourWheeler/>} />
