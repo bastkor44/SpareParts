@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -31,7 +32,8 @@ function Home() {
   }, [totalSlides]);
 
   return (
-    <div className="p-4">
+    
+<div className="p-4">
 
       {/* //CAROSEL  */}
       <div className="relative w-full h-[500px] overflow-hidden mb-20 rounded-xl shadow-xl">
@@ -91,8 +93,24 @@ function Home() {
             />
           ))}
         </div>
+        
       </div>
+      <div className="flex flex-col items-center gap-4 mb-10">
+  <p className="text-gray-500 text-base lg:text-lg max-w-2xl leading-relaxed text-center">
+    Sahand Estate is the best place to find your next perfect place to live. <br />
+    We have a wide range of properties for you to choose from.
+  </p>
+  <Link
+  to={"/search"}
+  className="text-blue-800 font-bold text-lg hover:underline transition-all duration-300 transform hover:scale-105"
+>
+  Let's Explore...
+</Link>
+
+</div>
+      
     </div>
+    
   );
 }
 
