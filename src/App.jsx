@@ -1,6 +1,5 @@
-
-import React from "react"
-import { BrowserRouter , Route, Routes } from 'react-router-dom';
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
@@ -15,50 +14,43 @@ import Cart from "./Pages/Cart";
 import Search from "./Pages/Search";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import DashBoard from "./components/MANAGER-DASHBOARD/DashBoard";
+import CreateListing from "./components/MANAGER-DASHBOARD/CreateListing";
 function App() {
-
   return (
     <>
-    <BrowserRouter>
-      <Header/>
-      <MainContents/>
-      <Footer/>
-
-    </BrowserRouter>
-       
+      <BrowserRouter>
+        <Header />
+        <MainContents />
+        <Footer />
+      </BrowserRouter>
     </>
-  )
+  );
 }
 
-function MainContents(){
-  return(
-<>
-<Routes>
-<Route path="/" element={<Home/>} />
-<Route path="/about" element={<About/>} />
-<Route path="/login" element={<Login/>} />
-<Route path="/register" element={<Register/>} />
+function MainContents() {
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-<Route path="/twowheeler" element={<Twowheeler/>} />
-<Route path="/fourwheeler" element={<FourWheeler/>} />
-<Route path="/search" element={<Search/>} />
+        <Route path="/twowheeler" element={<Twowheeler />} />
+        <Route path="/fourwheeler" element={<FourWheeler />} />
+        <Route path="/search" element={<Search />} />
 
-<Route path="/wishlist" element={<WishList/>} />
-<Route path="/cart" element={<Cart/>} />
-
-
+        <Route path="/wishlist" element={<WishList />} />
+        <Route path="/cart" element={<Cart />} />
 
 
+        <Route path="/dashboard" element={<DashBoard/>} />
+        <Route path="/dashboard/createlisting" element={<CreateListing/>} />
 
-
-</Routes>
-
-</>
-  
-  
-  
-  
-  ) 
+      </Routes>
+    </>
+  );
 }
 
-export default App
+export default App;

@@ -35,6 +35,12 @@ function Register() {
           className="border p-3 rounded-lg"
           required
         />
+        <input
+          type="text"
+          placeholder="Your address..."
+          className="border p-3 rounded-lg"
+          required
+        />
 
         <button
           type="submit"
@@ -46,7 +52,7 @@ function Register() {
 
       <div className="flex gap-2 mt-5">
         <p>Have an account?</p>
-        <Link to={"/sign-in"}>
+        <Link to={"/login"}>
           <span className="text-blue-700 hover:underline">Sign In</span>
         </Link>
       </div>

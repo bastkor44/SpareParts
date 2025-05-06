@@ -39,7 +39,7 @@ function About() {
       <section className="flex flex-col lg:flex-row items-center gap-16 mb-16">
         <div className="w-full lg:w-1/2">
           <img
-            src="/images/slide3.jpg" 
+            src="/images/twowheeler3.jpg" 
             alt="Two-Wheeler Parts"
             className="w-full h-[400px] object-cover rounded-lg shadow-lg transition-transform duration-300 hover:scale-105"
           />
@@ -63,7 +63,7 @@ function About() {
         </div>
         <div className="w-full lg:w-1/2">
           <img
-            src="/images/slide4.jpg"
+            src="/images/fourwheeler1.jpg"
             alt="Four-Wheeler Parts"
             className="w-full h-[400px] object-cover rounded-lg shadow-lg transition-transform duration-300 hover:scale-105"
           />

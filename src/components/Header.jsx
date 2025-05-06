@@ -3,6 +3,7 @@ import { RiUserSettingsFill } from "react-icons/ri";
 import { IoMdMenu, IoMdClose, IoMdArrowDropdown } from "react-icons/io";
 import { FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { VscSignIn } from "react-icons/vsc";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -41,7 +42,7 @@ function Header() {
         <ul
           className={`sm:flex sm:gap-6 items-center text-slate-700 font-medium absolute sm:relative top-16 sm:top-0 left-0 w-full sm:w-auto bg-slate-200 sm:bg-transparent mr-90 shadow-md sm:shadow-none p-6 sm:p-0 ${
             menuOpen ? "block" : "hidden"
-          } z-50`}  // Added z-50 to ensure it stays above other content
+          } z-50`} // Added z-50 to ensure it stays above other content
         >
           <a href="/" className="block sm:inline hover:underline">
             <li>Home</li>
@@ -55,14 +56,12 @@ function Header() {
             <button
               onClick={() => {
                 setDropdownOpen(!dropdownOpen);
-                setProfileOpen(false); 
+                setProfileOpen(false);
               }}
               className="flex items-center text-slate-700 hover:underline cursor-pointer"
             >
               Products
               <IoMdArrowDropdown
-
-              
                 className={`ml-2 transition-transform duration-200 ease-in-out ${
                   dropdownOpen ? "rotate-180" : "rotate-0"
                 }`}
@@ -127,21 +126,17 @@ function Header() {
             )}
           </li>
           {/* LOGIN / REGISTER */}
-<li className="block sm:inline mt-2 sm:mt-0">
-  <a
-    href="/login"
-    className="inline-block text-sm sm:text-base text-white bg-slate-600 hover:bg-slate-800 px-4 py-2 rounded-full transition duration-300 mr-2"
-  >
-    Login
-  </a>
-  <a
-    href="/register"
-    className="inline-block text-sm sm:text-base text-slate-800 border border-slate-800 hover:bg-slate-800 hover:text-white px-4 py-2 rounded-full transition duration-300"
-  >
-    Register
-  </a>
-</li>
-
+          <li className="block sm:inline mt-2 sm:mt-0">
+          
+<a
+  href="/login"
+  className="inline-flex items-center justify-center gap-2 text-sm sm:text-base text-white bg-slate-600  hover:bg-slate-900 px-4 py-2 rounded-full transition duration-300 mr-2"
+>
+  <span>Sign-in</span>
+  <VscSignIn />
+</a>
+        
+          </li>
         </ul>
       </div>
     </header>

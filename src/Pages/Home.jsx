@@ -36,14 +36,14 @@ function Home() {
       title: "Four Wheeler Parts",
       description:
        "Discover an extensive range of high-quality car spare parts designed to ensure exceptional durability and top-tier performance. Whether you're looking for engines, suspensions, brakes, or guarantee your vehicle stays in peak condition for longer, no matter the journey ahead.",
-      image: "/images/slide3.jpg",
+      image: "/images/fourwheeler2.jpg",
       link: "/fourwheeler", 
     },
     {
       title: "Two Wheeler Parts",
       description:
         "Explore our wide range of motorcycle spare parts, including engines, brakes, and accessories, designed for all bike models. From essential components to performance upgrades, we provide high-quality parts to enhance your bike's durability and performance.",
-      image: "/images/slide4.jpg",
+      image: "/images/twowheeler1.jpg",
       link: "/twowheeler",
     },
   ];
