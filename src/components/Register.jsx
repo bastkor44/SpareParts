@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -10,8 +12,7 @@ function Register() {
     address: "",
   });
 
-  const navigate = useNavigate(); 
-  const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,22 +23,21 @@ function Register() {
 
     localStorage.setItem("user", JSON.stringify(formData));
 
-    setSuccess(true);
+    toast.success("Successfully registered! Redirecting to login...", {
+      position: "top-center",
+      autoClose: 2000,
+    });
 
     setTimeout(() => {
       navigate("/login");
-    }, 1500);
+    }, 2000);
   };
 
   return (
     <div className="p-3 max-w-lg mx-auto mt-[120px] mb-80">
-      <h1 className="text-3xl text-center font-semibold my-7">Sign Up</h1>
+      <ToastContainer />
 
-      {success && (
-        <p className="text-green-600 bg-green-100 p-3 rounded-lg">
-          Successfully registered! Redirecting to login...
-        </p>
-      )}
+      <h1 className="text-3xl text-center font-semibold my-7">Sign Up</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
@@ -88,7 +88,7 @@ function Register() {
 
         <button
           type="submit"
-          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-70"
+          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95"
         >
           Sign Up
         </button>

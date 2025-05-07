@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -19,8 +21,14 @@ function Login() {
       storedUser.password === password
     ) {
       setError("");
+      toast.success("Login successful!", {
+        position: "top-center",
+        autoClose: 2000,
+      });
 
-      navigate("/");
+      setTimeout(() => {
+        navigate("/");
+      }, 2000); // Wait for toast to show
     } else {
       setError("Invalid email or password");
     }
@@ -28,6 +36,8 @@ function Login() {
 
   return (
     <div className="p-3 max-w-lg mx-auto mt-[150px] mb-80">
+      <ToastContainer />
+
       <h1 className="text-3xl text-center font-semibold my-7">Sign In</h1>
 
       {error && <p className="text-red-500 bg-red-100 p-2 rounded">{error}</p>}

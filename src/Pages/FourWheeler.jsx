@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { GiClick } from "react-icons/gi";
 import { TbHandFingerDown } from "react-icons/tb";
-import { FaHeart, FaRegHeart, FaShoppingCart } from "react-icons/fa";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const companies = [
   {
@@ -30,7 +32,7 @@ const companies = [
 export default function FourWheeler() {
   const [selected, setSelected] = useState(null);
   const [wishlist, setWishlist] = useState([]);
-  const [cart, setCart] = useState([]);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   const toggleWishlist = (item) => {
     setWishlist((prev) =>
@@ -40,44 +42,117 @@ export default function FourWheeler() {
     );
   };
 
-  const toggleCart = (item) => {
-    setCart((prev) =>
-      prev.find((i) => i.id === item.id)
-        ? prev.filter((i) => i.id !== item.id)
-        : [...prev, item]
-    );
+  const handleAddToCart = () => {
+    toast.success("Added to cart successfully!", {
+      position: "top-center",
+      autoClose: 2000,
+    });
+  };
+
+  const handleBuyNow = () => {
+    setShowPaymentModal(true);
+  };
+
+  const handlePaymentSuccess = () => {
+    toast.success("Payment Successful!", {
+      position: "top-center",
+      autoClose: 2000,
+    });
+    setShowPaymentModal(false);
+    setSelected(null);
   };
 
   return (
-    <section className="py-16 px-4 max-w-7xl mx-auto">
+    <section className="py-16 px-4 max-w-7xl mx-auto relative">
+      <ToastContainer />
       <h2 className="text-3xl md:text-4xl font-semibold mb-12">
         <span className="flex gap-1 items-center">
           Our SpareParts World <TbHandFingerDown />
         </span>
       </h2>
 
+      {/* Payment Modal */}
+      {showPaymentModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4">Complete Your Purchase</h2>
+            <p className="mb-2"><strong>Item:</strong> {selected.name}</p>
+            <p className="mb-2"><strong>Price:</strong> {selected.price}</p>
+
+            <input
+              type="text"
+              placeholder="Card Number"
+              className="border p-2 rounded w-full mb-2"
+            />
+            <input
+              type="text"
+              placeholder="Name on Card"
+              className="border p-2 rounded w-full mb-2"
+            />
+            <div className="flex gap-2 mb-4">
+              <input type="text" placeholder="MM/YY" className="border p-2 rounded w-full" />
+              <input type="text" placeholder="CVV" className="border p-2 rounded w-full" />
+            </div>
+
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowPaymentModal(false)}
+                className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handlePaymentSuccess}
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+              >
+                Pay Now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Product Details View */}
       {selected ? (
         <div className="bg-white p-6 rounded-xl shadow-md">
-          <img src={selected.image} alt={selected.name} className="w-full h-80 object-cover rounded-lg mb-4" />
+          <img
+            src={selected.image}
+            alt={selected.name}
+            className="w-full h-80 object-cover rounded-lg mb-4"
+          />
           <h3 className="text-2xl font-bold capitalize">{selected.name}</h3>
           <p className="text-gray-600 mt-2">{selected.description}</p>
           <p className="text-xl mt-4 font-semibold">Price: {selected.price}</p>
-          <button className="mt-6 px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
-            Order Now
-          </button>
-          <button
-            className="mt-4 ml-4 px-6 py-2 border border-black text-black rounded hover:bg-gray-100 transition"
-            onClick={() => setSelected(null)}
-          >
-            Back
-          </button>
+
+          <div className="mt-6 flex flex-wrap gap-4">
+            <button
+              className="px-6 py-2 bg-slate-800 text-white rounded hover:bg-slate-600 transition"
+              onClick={handleAddToCart}
+            >
+              Add To Cart
+            </button>
+
+            <button
+              className="px-6 py-2 bg-slate-600 text-white rounded hover:bg-slate-800 transition"
+              onClick={handleBuyNow}
+            >
+              Buy Now
+            </button>
+
+            <button
+              className="px-6 py-2 border border-black text-black rounded hover:bg-gray-100 transition"
+              onClick={() => setSelected(null)}
+            >
+              Back
+            </button>
+          </div>
         </div>
       ) : (
         <div className="grid md:grid-cols-3 gap-6">
           {companies.map((company) => (
             <div key={company.id} className="bg-white rounded-xl shadow-md overflow-hidden relative">
-              {/* Wishlist & Cart Icons */}
-              <div className="absolute top-2 left-2 z-10 flex gap-3 text-xl">
+              {/* Wishlist Icon */}
+              <div className="absolute top-2 left-2 z-10 text-xl">
                 <button onClick={() => toggleWishlist(company)}>
                   {wishlist.find((i) => i.id === company.id) ? (
                     <FaHeart className="text-red-600 text-4xl" />
@@ -85,20 +160,15 @@ export default function FourWheeler() {
                     <FaRegHeart className="text-gray-900 text-3xl" />
                   )}
                 </button>
-                <button onClick={() => toggleCart(company)}>
-                  <FaShoppingCart
-                    className={
-                      cart.find((i) => i.id === company.id)
-                        ? "text-red-600 text-4xl" // Red when it's in the cart
-                        : "text-gray-900 text-3xl"
-                    }
-                  />
-                </button>
               </div>
 
-              {/* Image & Click */}
+              {/* Image & Click Icon */}
               <div className="relative h-72 w-full">
-                <img src={company.image} alt={company.name} className="w-full h-full object-cover" />
+                <img
+                  src={company.image}
+                  alt={company.name}
+                  className="w-full h-full object-cover"
+                />
                 <div
                   className="absolute bottom-[-12px] right-[-12px] w-24 h-24 bg-slate-700 rounded-tl-full shadow-md flex items-center justify-center cursor-pointer"
                   onClick={() => setSelected(company)}
