@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const CreateListing = () => {
+const CreateListingss = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -40,7 +40,7 @@ const CreateListing = () => {
     console.log('Form submitted:', Object.fromEntries(data.entries()));
     toast.success("Listing created successfully!");
     setTimeout(() => {
-      navigate("/managerboard/list");
+      navigate("/adminboard/list");
     }, 2000);
   };
 
@@ -50,7 +50,7 @@ const CreateListing = () => {
         <div className="max-w-screen-xl mx-auto flex justify-between items-center px-4 sm:px-6 py-2">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <Link to="/managerboard" className="flex items-center gap-2">
+            <Link to="/adminboard" className="flex items-center gap-2">
               <RiUserSettingsFill className="text-blue-900 text-4xl" />
               <h1 className="font-bold text-lg sm:text-xl flex flex-wrap">
                 <span className="text-slate-400">Auto</span>
@@ -62,7 +62,7 @@ const CreateListing = () => {
           {/* Home Icon & Logout Button */}
           <div className="flex items-center gap-4">
             <Link
-              to="/managerboard"
+              to="/adminboard"
               className="text-slate-500 hover:text-slate-900 text-2xl"
               title="Dashboard Home"
             >
@@ -149,4 +149,4 @@ const CreateListing = () => {
   );
 };
 
-export default CreateListing;
+export default CreateListingss;
