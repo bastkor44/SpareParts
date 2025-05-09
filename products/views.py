@@ -83,15 +83,15 @@ def list_categories(request):
         return Response(serializer.data)
     return Response({'detail': 'You do not have permission to view categories.'}, status=403)
 
-"""@api_view(['DELETE'])
+@api_view(['DELETE'])
 @permission_classes([IsAuthenticated, IsAdminOrManager])
-def delete_product(request, product_id):
+def delete_product(request, pk):
     try:
-        product = Product.objects.get(pk=product_id)
+        product = Product.objects.get(pk=pk)
         product.delete()
         return Response({'message': 'Product deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
     except Product.DoesNotExist:
-        return Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)"""
+        return Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])
