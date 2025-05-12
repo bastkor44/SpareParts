@@ -18,19 +18,34 @@ function Register() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    localStorage.setItem("user", JSON.stringify(formData));
+    try {
+      const res = await fetch("http://localhost:8000/api/register/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    toast.success("Successfully registered! Redirecting to login...", {
-      position: "top-center",
-      autoClose: 2000,
-    });
+      const data = await res.json();
 
-    setTimeout(() => {
-      navigate("/login");
-    }, 2000);
+      if (res.ok) {
+        toast.success("Successfully registered! Redirecting to login...", {
+          position: "top-center",
+          autoClose: 2000,
+        });
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } else {
+        toast.error(data.detail || "Registration failed");
+      }
+    } catch (err) {
+      toast.error("Server error. Please try again.");
+    }
   };
 
   return (
@@ -40,56 +55,13 @@ function Register() {
       <h1 className="text-3xl text-center font-semibold my-7">Sign Up</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
-          type="text"
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
-          placeholder="Username..."
-          className="border p-3 rounded-lg"
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          placeholder="email@.com..."
-          className="border p-3 rounded-lg"
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          placeholder="Enter your password..."
-          className="border p-3 rounded-lg"
-          required
-        />
-        <input
-          type="text"
-          name="contact"
-          value={formData.contact}
-          onChange={handleChange}
-          placeholder="Contact number..."
-          className="border p-3 rounded-lg"
-          required
-        />
-        <input
-          type="text"
-          name="address"
-          value={formData.address}
-          onChange={handleChange}
-          placeholder="Your address..."
-          className="border p-3 rounded-lg"
-          required
-        />
+        <input type="text" name="username" value={formData.username} onChange={handleChange} placeholder="Username..." className="border p-3 rounded-lg" required />
+        <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="email@.com..." className="border p-3 rounded-lg" required />
+        <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Enter your password..." className="border p-3 rounded-lg" required />
+        <input type="text" name="contact" value={formData.contact} onChange={handleChange} placeholder="Contact number..." className="border p-3 rounded-lg" required />
+        <input type="text" name="address" value={formData.address} onChange={handleChange} placeholder="Your address..." className="border p-3 rounded-lg" required />
 
-        <button
-          type="submit"
-          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95"
-        >
+        <button type="submit" className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95">
           Sign Up
         </button>
       </form>

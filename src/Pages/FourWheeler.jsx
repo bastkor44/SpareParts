@@ -1,38 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { GiClick } from "react-icons/gi";
 import { TbHandFingerDown } from "react-icons/tb";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-const companies = [
-  {
-    id: 1,
-    name: "trust & co.",
-    description: "Fill out the form and the algorithm will offer the right team of experts",
-    price: "$250",
-    image: "https://images.unsplash.com/photo-1601049676869-702ea24cfd58?q=80&w=2073",
-  },
-  {
-    id: 2,
-    name: "tonic",
-    description: "Fill out the form and the algorithm will offer the right team of experts",
-    price: "$300",
-    image: "https://images.unsplash.com/photo-1613235788366-270e7ac489f3?q=80&w=2070",
-  },
-  {
-    id: 3,
-    name: "shower gel",
-    description: "Fill out the form and the algorithm will offer the right team of experts",
-    price: "$150",
-    image: "https://images.unsplash.com/photo-1673847401561-fcd75a7888c5?q=80&w=2070",
-  },
-];
+import axios from "axios";
 
 export default function FourWheeler() {
+  const [data, setData] = useState([]);
   const [selected, setSelected] = useState(null);
   const [wishlist, setWishlist] = useState([]);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+
+  const [priceFilter, setPriceFilter] = useState("");
+  const [interiorFilter, setInteriorFilter] = useState("");
+  const [exteriorFilter, setExteriorFilter] = useState("");
+
+  // Fetch data from Django backend
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("http://localhost:8000/api/fourwheeler/");
+        setData(res.data);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const toggleWishlist = (item) => {
     setWishlist((prev) =>
@@ -62,55 +58,55 @@ export default function FourWheeler() {
     setSelected(null);
   };
 
+  // Filter logic
+  const filteredCompanies = data.filter((item) => {
+    const priceMatch =
+      priceFilter === "" ||
+      (priceFilter === "<200" && item.price < 200) ||
+      (priceFilter === "200-300" && item.price >= 200 && item.price <= 300) ||
+      (priceFilter === ">300" && item.price > 300);
+
+    const interiorMatch =
+      interiorFilter === "" || item.interior === interiorFilter;
+
+    const exteriorMatch =
+      exteriorFilter === "" || item.exterior === exteriorFilter;
+
+    return priceMatch && interiorMatch && exteriorMatch;
+  });
+
   return (
     <section className="py-16 px-4 max-w-7xl mx-auto relative">
       <ToastContainer />
-      <h2 className="text-3xl md:text-4xl font-semibold mb-12">
+      <h2 className="text-3xl md:text-4xl font-semibold mb-6">
         <span className="flex gap-1 items-center">
           Our SpareParts World <TbHandFingerDown />
         </span>
       </h2>
 
-      {/* Payment Modal */}
-      {showPaymentModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Complete Your Purchase</h2>
-            <p className="mb-2"><strong>Item:</strong> {selected.name}</p>
-            <p className="mb-2"><strong>Price:</strong> {selected.price}</p>
+      {/* Filters */}
+      <div className="mb-10 grid gap-4 md:grid-cols-3">
+        <select
+          onChange={(e) => setPriceFilter(e.target.value)}
+          className="border p-2 rounded"
+          defaultValue=""
+        >
+          <option value="">All Prices</option>
+          <option value="<200">Below $200</option>
+          <option value="200-300">$200 - $300</option>
+          <option value=">300">Above $300</option>
+        </select>
 
-            <input
-              type="text"
-              placeholder="Card Number"
-              className="border p-2 rounded w-full mb-2"
-            />
-            <input
-              type="text"
-              placeholder="Name on Card"
-              className="border p-2 rounded w-full mb-2"
-            />
-            <div className="flex gap-2 mb-4">
-              <input type="text" placeholder="MM/YY" className="border p-2 rounded w-full" />
-              <input type="text" placeholder="CVV" className="border p-2 rounded w-full" />
-            </div>
-
-            <div className="flex justify-end gap-4">
-              <button
-                onClick={() => setShowPaymentModal(false)}
-                className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handlePaymentSuccess}
-                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-              >
-                Pay Now
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+        <select
+          onChange={(e) => setInteriorFilter(e.target.value)}
+          className="border p-2 rounded"
+          defaultValue=""
+        >
+          <option value="">Categories</option>
+          <option value="leather">interior</option>
+          <option value="fabric">exterior</option>
+        </select>
+      </div>
 
       {/* Product Details View */}
       {selected ? (
@@ -122,7 +118,7 @@ export default function FourWheeler() {
           />
           <h3 className="text-2xl font-bold capitalize">{selected.name}</h3>
           <p className="text-gray-600 mt-2">{selected.description}</p>
-          <p className="text-xl mt-4 font-semibold">Price: {selected.price}</p>
+          <p className="text-xl mt-4 font-semibold">Price: ${selected.price}</p>
 
           <div className="mt-6 flex flex-wrap gap-4">
             <button
@@ -131,14 +127,12 @@ export default function FourWheeler() {
             >
               Add To Cart
             </button>
-
             <button
               className="px-6 py-2 bg-slate-600 text-white rounded hover:bg-slate-800 transition"
               onClick={handleBuyNow}
             >
               Buy Now
             </button>
-
             <button
               className="px-6 py-2 border border-black text-black rounded hover:bg-gray-100 transition"
               onClick={() => setSelected(null)}
@@ -149,9 +143,11 @@ export default function FourWheeler() {
         </div>
       ) : (
         <div className="grid md:grid-cols-3 gap-6">
-          {companies.map((company) => (
-            <div key={company.id} className="bg-white rounded-xl shadow-md overflow-hidden relative">
-              {/* Wishlist Icon */}
+          {filteredCompanies.map((company) => (
+            <div
+              key={company.id}
+              className="bg-white rounded-xl shadow-md overflow-hidden relative"
+            >
               <div className="absolute top-2 left-2 z-10 text-xl">
                 <button onClick={() => toggleWishlist(company)}>
                   {wishlist.find((i) => i.id === company.id) ? (
@@ -161,8 +157,6 @@ export default function FourWheeler() {
                   )}
                 </button>
               </div>
-
-              {/* Image & Click Icon */}
               <div className="relative h-72 w-full">
                 <img
                   src={company.image}
@@ -179,7 +173,9 @@ export default function FourWheeler() {
                 </div>
               </div>
               <div className="p-4">
-                <h3 className="text-xl font-bold capitalize">{company.name}</h3>
+                <h3 className="text-xl font-bold capitalize">
+                  {company.name}
+                </h3>
                 <p className="text-gray-600 mt-2">{company.description}</p>
               </div>
             </div>

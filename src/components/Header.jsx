@@ -21,6 +21,9 @@ function Header() {
     }
   };
 
+  // Add this above the component if not getting it from context/props
+  const userName = "John Doe"; // Replace with dynamic data in real app
+
   return (
     <header className="bg-slate-200 shadow-md py-3">
       <div className="max-w-screen-xl mx-auto flex justify-between items-center px-4 sm:px-6 py-2 relative">
@@ -107,19 +110,29 @@ function Header() {
             {profileOpen && (
               <div className="absolute right-0 top-full mt-2 bg-white shadow-lg rounded-lg w-48 z-50">
                 <Link
+                  to="/profile"
+                  onClick={() => setProfileOpen(false)}
+                  className="flex items-center px-4 py-2 text-slate-700 hover:bg-gray-100 hover:underline font-semibold"
+                >
+                  👤 {userName}
+                </Link>
+                <Link
                   to="/wishlist"
+                  onClick={() => setProfileOpen(false)}
                   className="flex items-center px-4 py-2 text-slate-700 hover:bg-gray-100"
                 >
                   <span className="mr-2">❤️</span> Wishlist
                 </Link>
                 <Link
                   to="/cart"
+                  onClick={() => setProfileOpen(false)}
                   className="flex items-center px-4 py-2 text-slate-700 hover:bg-gray-100"
                 >
                   <span className="mr-2">🛒</span> Cart
                 </Link>
                 <button
                   onClick={() => {
+                    setProfileOpen(false);
                     console.log("User logged out");
                     navigate("/login");
                   }}

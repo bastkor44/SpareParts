@@ -2,35 +2,52 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/userSlice";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-
-    if (
-      storedUser &&
-      storedUser.email === email &&
-      storedUser.password === password
-    ) {
-      setError("");
-      toast.success("Login successful!", {
-        position: "top-center",
-        autoClose: 2000,
+    try {
+      const res = await fetch("http://localhost:8000/api/login/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
       });
 
-      setTimeout(() => {
-        navigate("/");
-      }, 2000); // Wait for toast to show
-    } else {
-      setError("Invalid email or password");
+      const data = await res.json();
+
+      if (res.ok) {
+        dispatch(setUser(data)); // Save user to Redux
+        toast.success("Login successful!", {
+          position: "top-center",
+          autoClose: 2000,
+        });
+
+        setTimeout(() => {
+          // Redirect based on role
+          if (data.role === "admin") {
+            navigate("/adminboard");
+          } else if (data.role === "manager") {
+            navigate("/managerboard");
+          } else {
+            navigate("/home"); // Default for "user" or unknown roles
+          }
+        }, 2000);
+      } else {
+        setError(data.detail || "Invalid credentials");
+      }
+    } catch (err) {
+      setError("Server error. Please try again.");
     }
   };
 
@@ -67,10 +84,19 @@ function Login() {
         </button>
       </form>
 
-      <div className="flex gap-2 mt-5">
-        <p>Don't have an account?</p>
-        <Link to={"/register"}>
-          <span className="text-blue-700 hover:underline">Sign Up</span>
+      <div className="text-center mt-3">
+        <Link
+          to="/forgotpassword"
+          className="text-sm text-slate-800 hover:underline"
+        >
+          Forgot Password?
+        </Link>
+      </div>
+
+      <div className="flex justify-center gap-2 mt-5">
+        <p className="text-sm">Don't have an account?</p>
+        <Link to="/register" className="text-slate-900 text-sm hover:underline">
+          Sign Up
         </Link>
       </div>
     </div>

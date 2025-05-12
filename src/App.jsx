@@ -25,6 +25,12 @@ import ManageUserss from "./components/MANAGER-DASHBOARD/ManageUserss";
 import Orderss from "./components/MANAGER-DASHBOARD/Orderss";
 import Transactionss from "./components/MANAGER-DASHBOARD/Transactionss";
 import CreateListingss from "./components/ADMIN-DASHBOARD/CreateListingss";
+import Profile from "./Pages/Profile";
+import ForgotPassword from "./Pages/ForgotPassword";
+import Payment from "./Pages/Payment";
+import Upi from "./Pages/PaymentMethods/Upi";
+import CreditCard from "./Pages/PaymentMethods/CreditCard";
+import CashonDelivery from "./Pages/PaymentMethods/CashonDelivery";
 
 function App() {
   return (
@@ -62,16 +68,21 @@ function MainContents() {
       <Route path="/search" element={<Search />} />
       <Route path="/wishlist" element={<WishList />} />
       <Route path="/cart" element={<Cart />} />
-      
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/forgotpassword" element={<ForgotPassword />} />
+
+      <Route path="/payment" element={<Payment />} />
+      <Route path="/upi" element={<Upi />} />
+      <Route path="/debitcard" element={<CreditCard />} />
+      <Route path="/cashondelivery" element={<CashonDelivery />} />
 
       {/* Manager Dashboard Routes */}
       <Route path="/managerboard" element={<ManagerBoard />} />
       <Route path="/managerboard/createlisting" element={<CreateListing />} />
-      <Route path="/managerboard/list" element={<Listss/>} />
-      <Route path="/managerboard/user" element={<ManageUserss/>} />
-      <Route path="/managerboard/order" element={<Orderss/>} />
-      <Route path="/managerboard/transaction" element={<Transactionss/>} />
-
+      <Route path="/managerboard/list" element={<Listss />} />
+      <Route path="/managerboard/user" element={<ManageUserss />} />
+      <Route path="/managerboard/order" element={<Orderss />} />
+      <Route path="/managerboard/transaction" element={<Transactionss />} />
 
       {/* Admin Dashboard Routes */}
       <Route path="/adminboard" element={<AdminBoard />} />
@@ -81,7 +92,6 @@ function MainContents() {
       <Route path="/adminboard/list" element={<Lists />} />
       <Route path="/adminboard/order" element={<Orders />} />
       <Route path="/adminboard/transaction" element={<Transactions />} />
-
     </Routes>
   );
 }
