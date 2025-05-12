@@ -139,18 +139,22 @@ function Home() {
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl w-full">
           {cards.map((card, index) => (
-            <Link key={index} to={card.link}>
-              <div className="bg-white rounded-xl shadow-md hover:shadow-xl overflow-hidden transform transition duration-500 hover:scale-110">
+            <Link
+              key={index}
+              to={card.link}
+              className="transform transition duration-300 ease-in-out hover:scale-105"
+            >
+              <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl overflow-hidden transition-all duration-300">
                 <img
                   src={card.image}
                   alt={card.title}
-                  className="w-full h-64 object-cover transition duration-500 transform hover:scale-125 hover:opacity-90"
+                  className="w-full h-64 object-cover transition-transform duration-300 transform group-hover:scale-110 group-hover:opacity-90"
                 />
-                <div className="p-6">
-                  <h2 className="text-2xl font-semibold text-slate-800 mb-2">
+                <div className="p-6 transition-all duration-300">
+                  <h2 className="text-2xl font-semibold text-slate-800 mb-2 transform transition duration-500 hover:text-indigo-600">
                     {card.title}
                   </h2>
-                  <p className="text-gray-600 transform transition duration-500 hover:scale-105 hover:opacity-100 hover:text-indigo-600">
+                  <p className="text-gray-600 text-base leading-relaxed transform transition duration-500 hover:text-indigo-600 hover:scale-105">
                     {card.description}
                   </p>
                 </div>
@@ -158,6 +162,7 @@ function Home() {
             </Link>
           ))}
         </div>
+
         <div
           className="bg-white py-12 px-6 md:px-12 mt-20 shadow-md	"
           id="contact"

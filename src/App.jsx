@@ -31,6 +31,8 @@ import Payment from "./Pages/Payment";
 import Upi from "./Pages/PaymentMethods/Upi";
 import CreditCard from "./Pages/PaymentMethods/CreditCard";
 import CashonDelivery from "./Pages/PaymentMethods/CashonDelivery";
+import AddCategory from "./components/MANAGER-DASHBOARD/AddCategory";
+import AddCategoryy from "./components/ADMIN-DASHBOARD/AddCategoryy";
 
 function App() {
   return (
@@ -79,6 +81,7 @@ function MainContents() {
       {/* Manager Dashboard Routes */}
       <Route path="/managerboard" element={<ManagerBoard />} />
       <Route path="/managerboard/createlisting" element={<CreateListing />} />
+      <Route path="/managerboard/addcategory" element={<AddCategory />} />
       <Route path="/managerboard/list" element={<Listss />} />
       <Route path="/managerboard/user" element={<ManageUserss />} />
       <Route path="/managerboard/order" element={<Orderss />} />
@@ -88,6 +91,8 @@ function MainContents() {
       <Route path="/adminboard" element={<AdminBoard />} />
       <Route path="/adminboard/manager" element={<ManageManager />} />
       <Route path="/adminboard/createlisting" element={<CreateListingss />} />
+      <Route path="/adminboard/addcategory" element={<AddCategoryy />} />
+
       <Route path="/adminboard/user" element={<ManageUsers />} />
       <Route path="/adminboard/list" element={<Lists />} />
       <Route path="/adminboard/order" element={<Orders />} />
