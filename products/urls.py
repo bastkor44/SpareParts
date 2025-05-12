@@ -6,6 +6,8 @@ from .views import edit_product
 from .views import list_categories
 from .views import delete_product
 from .views import detail_product
+from .views import filtered_products
+from .views import search_products
 
 
 urlpatterns = [
@@ -16,4 +18,6 @@ urlpatterns = [
     path('detail-product/<int:pk>/', detail_product, name='detail-product'),
     path('list-category/', list_categories, name='list-category'),
     path('delete-product/<int:pk>/', delete_product, name='delete-product'),
+    path('filter/', filtered_products, name='filter-products'),
+    path('search/', search_products, name='search-products'),
 ]

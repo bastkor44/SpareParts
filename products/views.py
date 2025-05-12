@@ -8,6 +8,7 @@ from .serializers import ProductSerializer
 from .serializers import CategorySerializer 
 from rest_framework.permissions import BasePermission
 from .serializers import ProductUserSerializer, ProductAdminManagerSerializer, CategorySerializer
+from django.db.models import Q
 
 class IsAdminOrManager(BasePermission):
     def has_permission(self, request, view):
@@ -110,4 +111,39 @@ def detail_product(request, pk):
     else:
         return Response({'error': 'Invalid role'}, status=403)
 
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def filtered_products(request):
+    vehicle_type = request.GET.get('vehicle_type')
+    category = request.GET.get('category')  # e.g., 'interior'
+    price_range = request.GET.get('price_range')  # 'below_300', 'above_300', or 'all'
+
+    products = Product.objects.all()
+
+    if vehicle_type:
+        products = products.filter(vehicle_type__iexact=vehicle_type)
+
+    if category:
+        products = products.filter(category__category_name__iexact=category)
+
+    if price_range == 'below_300':
+        products = products.filter(price__lt=300)
+    elif price_range == 'above_300':
+        products = products.filter(price__gte=300)
+
+    serializer = ProductUserSerializer(products, many=True)
+    return Response(serializer.data)
+
+
+
+@api_view(['GET'])
+def search_products(request):
+    query = request.GET.get('q', '')  # search keyword
+    products = Product.objects.filter(
+        Q(name__icontains=query) |
+        Q(category__category_name__icontains=query)
+    )
+    serializer = ProductSerializer(products, many=True)
     return Response(serializer.data)
