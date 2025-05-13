@@ -7,6 +7,10 @@ from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework import generics
+from .models import CustomUser
+from rest_framework import permissions
+
 
 @api_view(['POST'])
 def register_user(request):
@@ -98,3 +102,10 @@ def delete_profile(request, pk):
 
     user_to_delete.delete()
     return Response({"detail": "User account deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+
+
+
+class UserProfileView(generics.RetrieveAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.AllowAny] 

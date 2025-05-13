@@ -7,6 +7,7 @@ from .views import register_user
 from .views import LoginView
 from .views import update_profile
 from .views import delete_profile
+from .views import UserProfileView
 
 urlpatterns = [
     path('register/', register_user, name='register'),
@@ -14,5 +15,6 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('update-profile/<int:pk>/', update_profile, name='update-user-by-id'),
     path('delete-profile/<int:pk>/', delete_profile, name='delete-profile'),
-    
+    path('view-profile/<int:pk>/', UserProfileView.as_view(), name='delete-profile'),
+
 ]
