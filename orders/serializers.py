@@ -3,6 +3,8 @@ from .models import CartItem
 from .models import Notification
 from .models import Order, OrderItem,Wishlist
 from django.contrib.auth import get_user_model
+from .models import Product  # If Product is defined in the same app
+
 
 
 class CartItemSerializer(serializers.ModelSerializer):
@@ -46,7 +48,8 @@ class OrderSerializer(serializers.ModelSerializer):
 class WishlistSerializer(serializers.ModelSerializer):
     product_name = serializers.ReadOnlyField(source='product.name')
     product_image = serializers.ImageField(source='product.image', read_only=True)  # Optional
+    product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())  # Adding product field
 
     class Meta:
         model = Wishlist
-        fields = [ 'product_name', 'product_image']
+        fields = ['product', 'product_name', 'product_image']

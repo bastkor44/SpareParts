@@ -14,6 +14,8 @@ from .serializers import OrderSerializer
 from rest_framework.decorators import action
 from .models import Wishlist
 from .serializers import WishlistSerializer
+from .models import Product  # If Product is defined in the same app
+
 
 class IsAdminOrManager(BasePermission):
     def has_permission(self, request, view):
@@ -94,19 +96,21 @@ class WishlistViewSet(viewsets.ModelViewSet):
         return Wishlist.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        product_id = self.request.data.get('product')
+        product_id = self.request.data.get('product')  # Get the product ID from the request
         if Wishlist.objects.filter(user=self.request.user, product_id=product_id).exists():
             raise serializers.ValidationError("This product is already in your wishlist.")
         serializer.save(user=self.request.user)
 
     @action(detail=True, methods=['delete'], url_path='remove')
     def remove_from_wishlist(self, request, pk=None):
+        print(f"User: {request.user}, Trying to delete Wishlist ID: {pk}")
         try:
             wishlist_item = Wishlist.objects.get(id=pk, user=request.user)
             wishlist_item.delete()
             return Response({'message': 'Item removed from wishlist.'}, status=status.HTTP_204_NO_CONTENT)
         except Wishlist.DoesNotExist:
             return Response({'error': 'Item not found in wishlist.'}, status=status.HTTP_404_NOT_FOUND)
+
 
 
 
