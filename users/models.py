@@ -5,6 +5,7 @@ class CustomUser(AbstractUser):
     ROLE_CHOICES = [
         ('manager', 'Manager'),
         ('user', 'User'),
+        ('admin','Admin')
     ]
     phone = models.CharField(max_length=15)
     address = models.TextField()

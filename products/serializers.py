@@ -30,4 +30,4 @@ class ProductAdminManagerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = ["product_id","name","category","description","vehicle_type","price","picture","quantity"]

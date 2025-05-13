@@ -1,7 +1,7 @@
 from django.db import models
-from django.db import models
 from django.conf import settings
-from products.models import Product  # Adjust if needed
+from products.models import Product
+from django.utils import timezone  
 
 # Wishlist model
 class Wishlist(models.Model):
@@ -22,12 +22,13 @@ class CartItem(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.product.name} (x{self.quantity})"
 
-# Order model
+
 class Order(models.Model):
     ORDER_STATUS = [
-    ('Pending', 'Pending'),
-    ('Shipped', 'Shipped'),
-    ('Delivered', 'Delivered'),
+        ('Pending', 'Pending'),
+        ('Shipped', 'Shipped'),
+        ('Delivered', 'Delivered'),
+        ('Cancelled', 'Cancelled'),
     ]
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -36,10 +37,12 @@ class Order(models.Model):
     phone_number = models.CharField(max_length=15)
     order_status = models.CharField(max_length=10, choices=ORDER_STATUS, default='Pending')
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateField(default=timezone.now)  # ✅ Date only
     is_paid = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Order #{self.id} by {self.user.username}"
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
@@ -70,3 +73,12 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"Payment for Order #{self.order.id}"
+
+class Notification(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='notifications')
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Notification to {self.user.username}: {self.message[:30]}"

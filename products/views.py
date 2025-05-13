@@ -18,8 +18,8 @@ class IsAdminOrManager(BasePermission):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_product(request):
-    if request.user.role != 'manager':
-        return Response({'error': 'Only managers can add products.'}, status=status.HTTP_403_FORBIDDEN)
+    if request.user.role not in ['admin', 'manager']:
+        return Response({'error': 'Only managers and admin can add products.'}, status=status.HTTP_403_FORBIDDEN)
 
     serializer = ProductSerializer(data=request.data)
     if serializer.is_valid():
@@ -118,7 +118,7 @@ def detail_product(request, pk):
 def filtered_products(request):
     vehicle_type = request.GET.get('vehicle_type')
     category = request.GET.get('category')  # e.g., 'interior'
-    price_range = request.GET.get('price_range')  # 'below_300', 'above_300', or 'all'
+    price_range = request.GET.get('price')  # 'below_300', 'above_300', or 'all'
 
     products = Product.objects.all()
 

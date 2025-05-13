@@ -14,4 +14,5 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('update-profile/<int:pk>/', update_profile, name='update-user-by-id'),
     path('delete-profile/<int:pk>/', delete_profile, name='delete-profile'),
+    
 ]
