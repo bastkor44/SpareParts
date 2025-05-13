@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { RiUserSettingsFill } from "react-icons/ri";
 import { IoMdMenu, IoMdClose, IoMdArrowDropdown } from "react-icons/io";
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle, FaRegUser, FaHeart, FaShoppingCart, FaBox } from "react-icons/fa";
 import { VscSignIn } from "react-icons/vsc";
+import { FiLogOut } from "react-icons/fi";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -21,7 +22,6 @@ function Header() {
     }
   };
 
-  // Add this above the component if not getting it from context/props
   const userName = "John Doe"; // Replace with dynamic data in real app
 
   return (
@@ -114,21 +114,28 @@ function Header() {
                   onClick={() => setProfileOpen(false)}
                   className="flex items-center px-4 py-2 text-slate-700 hover:bg-gray-100 hover:underline font-semibold"
                 >
-                  👤 {userName}
+                  <FaRegUser className="mr-2" /> {userName}
                 </Link>
                 <Link
                   to="/wishlist"
                   onClick={() => setProfileOpen(false)}
                   className="flex items-center px-4 py-2 text-slate-700 hover:bg-gray-100"
                 >
-                  <span className="mr-2">❤️</span> Wishlist
+                  <FaHeart className="mr-2 text-pink-500" /> Wishlist
                 </Link>
                 <Link
                   to="/cart"
                   onClick={() => setProfileOpen(false)}
                   className="flex items-center px-4 py-2 text-slate-700 hover:bg-gray-100"
                 >
-                  <span className="mr-2">🛒</span> Cart
+                  <FaShoppingCart className="mr-2 text-green-600" /> Cart
+                </Link>
+                <Link
+                  to="/orders"
+                  onClick={() => setProfileOpen(false)}
+                  className="flex items-center px-4 py-2 text-slate-700 hover:bg-gray-100"
+                >
+                  <FaBox className="mr-2 text-yellow-600" /> Orders
                 </Link>
                 <button
                   onClick={() => {
@@ -138,7 +145,7 @@ function Header() {
                   }}
                   className="flex items-center w-full px-4 py-2 text-slate-700 hover:bg-gray-100 text-left"
                 >
-                  <span className="mr-2">🚪</span> Logout
+                  <FiLogOut className="mr-2 text-red-500" /> Logout
                 </button>
               </div>
             )}

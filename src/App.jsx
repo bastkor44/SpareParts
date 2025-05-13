@@ -33,6 +33,7 @@ import CreditCard from "./Pages/PaymentMethods/CreditCard";
 import CashonDelivery from "./Pages/PaymentMethods/CashonDelivery";
 import AddCategory from "./components/MANAGER-DASHBOARD/AddCategory";
 import AddCategoryy from "./components/ADMIN-DASHBOARD/AddCategoryy";
+import OrderData from "./Pages/OrderData";
 
 function App() {
   return (
@@ -70,6 +71,7 @@ function MainContents() {
       <Route path="/search" element={<Search />} />
       <Route path="/wishlist" element={<WishList />} />
       <Route path="/cart" element={<Cart />} />
+      <Route path="/orders" element={<OrderData />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
 
