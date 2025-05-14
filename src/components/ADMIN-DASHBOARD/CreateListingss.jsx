@@ -4,6 +4,7 @@ import { RiUserSettingsFill } from 'react-icons/ri';
 import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from "../../lib/axios";
 
 const CreateListingss = () => {
   const navigate = useNavigate();
@@ -16,17 +17,17 @@ const CreateListingss = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    type: '',
+    vehicle_type: '',
     category: '',
     price: '',
-    image: null,
+    picture: null,
     quantity: '',
   });
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === 'image') {
-      setFormData({ ...formData, image: files[0] });
+    if (name === 'picture') {
+      setFormData({ ...formData, picture: files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -40,24 +41,20 @@ const CreateListingss = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/listings/', {
-        method: 'POST',
-        body: data,
-        credentials: 'include', // important if using session auth or JWT with cookies
+      const res = await axios.post("/api/products/add/", data, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to create listing');
-      }
 
       toast.success("Listing created successfully!");
       setTimeout(() => {
         navigate("/adminboard/list");
       }, 2000);
     } catch (error) {
-      console.error("Error creating listing:", error.message);
-      toast.error(`Error: ${error.message}`);
+      console.error("Error creating listing:", error.response?.data || error.message);
+      toast.error(`Error: ${error.response?.data?.detail || error.message}`);
     }
   };
 
@@ -114,9 +111,9 @@ const CreateListingss = () => {
             required
           />
           <select
-            name="type"
+            name="vehicle_type"
             className="w-full p-2 border rounded"
-            value={formData.type}
+            value={formData.vehicle_type}
             onChange={handleChange}
             required
           >
@@ -148,22 +145,22 @@ const CreateListingss = () => {
             <label className="block">Upload Image</label>
             <input
               type="file"
-              name="image"
+              name="picture"
               accept="image/*"
               className="w-full p-2"
               onChange={handleChange}
               required
             />
-            {formData.image && (
+            {formData.picture && (
               <div className="mt-4 flex flex-col items-center">
                 <img
-                  src={URL.createObjectURL(formData.image)}
+                  src={URL.createObjectURL(formData.picture)}
                   alt="Selected"
                   className="w-32 h-32 object-cover rounded"
                 />
                 <button
                   type="button"
-                  onClick={() => setFormData({ ...formData, image: null })}
+                  onClick={() => setFormData({ ...formData, picture: null })}
                   className="mt-2 text-red-600 hover:text-red-800"
                 >
                   Change Image
