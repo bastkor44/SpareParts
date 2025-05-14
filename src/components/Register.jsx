@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import axios from "../lib/axios
-";
+import axios from "../lib/axios";
 import "react-toastify/dist/ReactToastify.css";
 
 function Register() {
