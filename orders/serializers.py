@@ -25,8 +25,6 @@ class NotificationSerializer(serializers.ModelSerializer):
 
 
 
-
-
 class OrderSerializer(serializers.ModelSerializer):
     product_name = serializers.CharField(source='product.name', read_only=True)
     username = serializers.CharField(source='user.username', read_only=True)

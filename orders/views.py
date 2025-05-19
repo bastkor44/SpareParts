@@ -3,7 +3,6 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from .models import CartItem
 from products.models import Product
 from .serializers import CartItemSerializer
 from django.utils import timezone
@@ -15,6 +14,11 @@ from rest_framework.decorators import action
 from .models import Wishlist
 from .serializers import WishlistSerializer
 from .models import Product  # If Product is defined in the same app
+from rest_framework.views import APIView
+from decimal import Decimal
+from .models import CartItem
+from django.shortcuts import get_object_or_404
+from .models import OrderItem
 
 
 class IsAdminOrManager(BasePermission):
@@ -101,59 +105,73 @@ class WishlistViewSet(viewsets.ModelViewSet):
             raise serializers.ValidationError("This product is already in your wishlist.")
         serializer.save(user=self.request.user)
 
-    @action(detail=True, methods=['delete'], url_path='remove')
-    def remove_from_wishlist(self, request, pk=None):
-        print(f"User: {request.user}, Trying to delete Wishlist ID: {pk}")
-        try:
-            wishlist_item = Wishlist.objects.get(id=pk, user=request.user)
-            wishlist_item.delete()
-            return Response({'message': 'Item removed from wishlist.'}, status=status.HTTP_204_NO_CONTENT)
-        except Wishlist.DoesNotExist:
-            return Response({'error': 'Item not found in wishlist.'}, status=status.HTTP_404_NOT_FOUND)
+    def destroy(self, request, *args, **kwargs):
+        product_id = kwargs.get('pk')  # assuming you pass product_id in the URL
+
+        if not product_id:
+            return Response({"detail": "Product ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        wishlist_item = Wishlist.objects.filter(user=request.user, product_id=product_id).first()
+
+        if not wishlist_item:
+            return Response({"detail": "Wishlist item not found for this product."}, status=status.HTTP_404_NOT_FOUND)
+
+        wishlist_item.delete()
+        return Response({"detail": "Wishlist item deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
 
 
+class PlaceOrderView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.select_related('user', 'product').all().order_by('-updated_date')
-    serializer_class = OrderSerializer
+    def post(self, request):
+        user = request.user
+        data = request.data
 
-    def get_permissions(self):
-        if self.action in ['list', 'update', 'partial_update', 'cancel_order', 'set_status']:
-            return [permissions.IsAuthenticated()]
-        elif self.action in ['admin_orders', 'set_status']:
-            return [IsAdminOrManager()]
-        return [permissions.IsAuthenticated()]
+        # Get details from user model instead of request
+        name = user.username
+        address = user.address
+        phone_number = user.phone
 
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_staff or user.groups.filter(name='manager').exists():
-            return Order.objects.select_related('user', 'product').all().order_by('-updated_date')
-        return Order.objects.filter(user=user).select_related('product').order_by('-updated_date')
+        if data.get("buy_now"):  # Single product ordering
+            product_id = data.get("product_id")
+            quantity = int(data.get("quantity", 1))
+            product = get_object_or_404(Product, product_id=product_id)
+            total_price = product.price * quantity
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+            order = Order.objects.create(
+                user=user,
+                total_amount=total_price,
+                name=name,
+                address=address,
+                phone_number=phone_number,
+            )
+            OrderItem.objects.create(order_id=order, product=product, quantity=quantity, price=product.price)
+            return Response({"detail": "Order placed (Buy Now)."}, status=201)
 
-    @action(detail=True, methods=['patch'], url_path='cancel')
-    def cancel_order(self, request, pk=None):
-        order = self.get_object()
-        if order.status not in ['cancelled', 'delivered']:
-            order.status = 'cancelled'
-            order.save()
-            return Response({'detail': 'Order cancelled successfully.'})
-        return Response({'detail': 'Order cannot be cancelled.'}, status=status.HTTP_400_BAD_REQUEST)
+        else:  # From Cart
+            cart_item_ids = data.get("cart_item_ids", [])
+            cart_items = CartItem.objects.filter(user=user, id__in=cart_item_ids)
+            if not cart_items:
+                return Response({"detail": "No cart items found."}, status=400)
 
-    @action(detail=True, methods=['patch'], url_path='set-status')
-    def set_status(self, request, pk=None):
-        """Used by admin/manager to update status"""
-        if not (request.user.is_staff or request.user.groups.filter(name='manager').exists()):
-            return Response({'detail': 'Not authorized.'}, status=status.HTTP_403_FORBIDDEN)
+            total_price = sum([item.product.price * item.quantity for item in cart_items])
 
-        order = self.get_object()
-        new_status = request.data.get('status')
-        if new_status not in dict(Order.ORDER_STATUS_CHOICES):  # Replace with your model field choices
-            return Response({'detail': 'Invalid status.'}, status=status.HTTP_400_BAD_REQUEST)
+            order = Order.objects.create(
+                user=user,
+                total_amount=total_price,
+                name=name,
+                address=address,
+                phone_number=phone_number,
+            )
 
-        order.status = new_status
-        order.save()
-        return Response({'detail': f'Status updated to {new_status}.'})
+            for item in cart_items:
+                OrderItem.objects.create(
+                    order_id=order,
+                    product=item.product,
+                    quantity=item.quantity,
+                    price=item.product.price
+                )
+                item.delete()
+
+            return Response({"detail": "Order placed (Cart checkout)."}, status=201)
